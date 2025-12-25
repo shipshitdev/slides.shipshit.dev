@@ -1,26 +1,23 @@
 {
-  "name": "slides",
+  "name": "pitch-deck-platform",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.1.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "pre:install": "bun update --latest --recursive && bun install",
+    "prepare:deploy": "bun install",
+    "dev": "bun --filter '*' run dev",
+    "dev:api": "bun --filter api run dev",
+    "dev:web": "bun --filter web run dev",
+    "build": "bun --filter '*' run build",
+    "start": "bun --filter '*' run start",
+    "lint": "bun --filter '*' run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,html,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,html,yml,yaml}\""
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.1",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "prettier": "^3.4.2"
   }
 }
