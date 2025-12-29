@@ -1,17 +1,17 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { Deck, DeckDocument } from './schemas/deck.schema';
-import { CreateDeckDto } from './dto/create-deck.dto';
-import { UpdateDeckDto } from './dto/update-deck.dto';
-import { ProjectsService } from '../projects/projects.service';
+import { type Model, Types } from 'mongoose';
 import { nanoid } from 'nanoid';
+import type { ProjectsService } from '../projects/projects.service';
+import type { CreateDeckDto } from './dto/create-deck.dto';
+import type { UpdateDeckDto } from './dto/update-deck.dto';
+import { Deck, type DeckDocument } from './schemas/deck.schema';
 
 @Injectable()
 export class DecksService {
   constructor(
     @InjectModel(Deck.name) private deckModel: Model<DeckDocument>,
-    private projectsService: ProjectsService,
+    private projectsService: ProjectsService
   ) {}
 
   private generateSlug(title: string): string {
@@ -73,9 +73,7 @@ export class DecksService {
     // Verify ownership
     await this.findOne(userId, id);
 
-    const deck = await this.deckModel
-      .findByIdAndUpdate(id, updateDeckDto, { new: true })
-      .exec();
+    const deck = await this.deckModel.findByIdAndUpdate(id, updateDeckDto, { new: true }).exec();
     if (!deck) {
       throw new NotFoundException(`Deck with ID ${id} not found`);
     }

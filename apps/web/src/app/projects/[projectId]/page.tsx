@@ -1,30 +1,23 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import Link from "next/link";
+import { useUser } from '@clerk/nextjs';
 import {
   ArrowLeft,
+  Eye,
   Plus,
   Presentation,
-  Users,
-  TrendingUp,
-  Target,
-  MoreVertical,
-  Trash2,
-  Eye,
   Share2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import {
-  projectsApi,
-  decksApi,
-  setAuthHeader,
-  type Project,
-  type Deck,
-} from "@/lib/api";
+  Target,
+  Trash2,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { type Deck, decksApi, type Project, projectsApi, setAuthHeader } from '@/lib/api';
 
 const audienceIcons = {
   cold_leads: Target,
@@ -34,10 +27,10 @@ const audienceIcons = {
 };
 
 const audienceLabels = {
-  cold_leads: "Cold Leads",
-  customers: "Customers",
-  investors: "Investors",
-  custom: "Custom",
+  cold_leads: 'Cold Leads',
+  customers: 'Customers',
+  investors: 'Investors',
+  custom: 'Custom',
 };
 
 export default function ProjectDetailPage() {
@@ -56,7 +49,7 @@ export default function ProjectDetailPage() {
       setAuthHeader(user.id);
       loadData();
     }
-  }, [isLoaded, user, projectId]);
+  }, [isLoaded, user, loadData]);
 
   async function loadData() {
     try {
@@ -68,7 +61,7 @@ export default function ProjectDetailPage() {
       setProject(projectRes.data);
       setDecks(decksRes.data);
     } catch (err) {
-      setError("Failed to load project");
+      setError('Failed to load project');
       console.error(err);
     } finally {
       setLoading(false);
@@ -76,7 +69,7 @@ export default function ProjectDetailPage() {
   }
 
   async function handleDeleteDeck(deckId: string) {
-    if (!confirm("Are you sure you want to delete this deck?")) return;
+    if (!confirm('Are you sure you want to delete this deck?')) return;
 
     try {
       await decksApi.delete(deckId);
@@ -87,11 +80,11 @@ export default function ProjectDetailPage() {
   }
 
   async function handleDeleteProject() {
-    if (!confirm("Are you sure you want to delete this project and all its decks?")) return;
+    if (!confirm('Are you sure you want to delete this project and all its decks?')) return;
 
     try {
       await projectsApi.delete(projectId);
-      router.push("/dashboard");
+      router.push('/dashboard');
     } catch (err) {
       console.error(err);
     }
@@ -117,7 +110,7 @@ export default function ProjectDetailPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-[var(--muted-foreground)]">{error || "Project not found"}</p>
+          <p className="text-[var(--muted-foreground)]">{error || 'Project not found'}</p>
           <Link href="/dashboard">
             <Button variant="outline" className="mt-4">
               Back to Dashboard
@@ -150,7 +143,7 @@ export default function ProjectDetailPage() {
           ) : (
             <div
               className="h-14 w-14 rounded-lg flex items-center justify-center text-white font-bold text-xl"
-              style={{ backgroundColor: project.colors?.primary || "#6366f1" }}
+              style={{ backgroundColor: project.colors?.primary || '#6366f1' }}
             >
               {project.name.charAt(0).toUpperCase()}
             </div>
@@ -204,17 +197,15 @@ export default function ProjectDetailPage() {
                       <div
                         className="h-10 w-10 rounded-lg flex items-center justify-center"
                         style={{
-                          backgroundColor: project.colors?.primary || "#6366f1",
-                          color: "#fff",
+                          backgroundColor: project.colors?.primary || '#6366f1',
+                          color: '#fff',
                         }}
                       >
                         <Icon className="h-5 w-5" />
                       </div>
                       <div>
                         <CardTitle className="text-base">{deck.title}</CardTitle>
-                        <CardDescription>
-                          {audienceLabels[deck.audienceType]}
-                        </CardDescription>
+                        <CardDescription>{audienceLabels[deck.audienceType]}</CardDescription>
                       </div>
                     </div>
                   </div>
@@ -235,7 +226,10 @@ export default function ProjectDetailPage() {
                         Edit
                       </Button>
                     </Link>
-                    <Link href={`/projects/${projectId}/decks/${deck._id}/present`} className="flex-1">
+                    <Link
+                      href={`/projects/${projectId}/decks/${deck._id}/present`}
+                      className="flex-1"
+                    >
                       <Button size="sm" className="w-full">
                         Present
                       </Button>
@@ -252,11 +246,7 @@ export default function ProjectDetailPage() {
                         <Share2 className="h-4 w-4" />
                       </Button>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteDeck(deck._id)}
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteDeck(deck._id)}>
                       <Trash2 className="h-4 w-4 text-[var(--destructive)]" />
                     </Button>
                   </div>

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsUrl, IsObject } from 'class-validator';
+import { IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class ProjectColorsDto {
   @ApiPropertyOptional()

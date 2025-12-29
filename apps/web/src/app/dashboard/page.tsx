@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
-import Link from "next/link";
-import { Plus, FolderOpen, Presentation, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { projectsApi, setAuthHeader, type Project } from "@/lib/api";
+import { useUser } from '@clerk/nextjs';
+import { ExternalLink, FolderOpen, Plus, Presentation } from 'lucide-react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { type Project, projectsApi, setAuthHeader } from '@/lib/api';
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -19,7 +19,7 @@ export default function DashboardPage() {
       setAuthHeader(user.id);
       loadProjects();
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, loadProjects]);
 
   async function loadProjects() {
     try {
@@ -27,7 +27,7 @@ export default function DashboardPage() {
       const response = await projectsApi.getAll();
       setProjects(response.data);
     } catch (err) {
-      setError("Failed to load projects");
+      setError('Failed to load projects');
       console.error(err);
     } finally {
       setLoading(false);
@@ -105,7 +105,7 @@ export default function DashboardPage() {
                       ) : (
                         <div
                           className="h-10 w-10 rounded flex items-center justify-center text-white font-bold"
-                          style={{ backgroundColor: project.colors?.primary || "#6366f1" }}
+                          style={{ backgroundColor: project.colors?.primary || '#6366f1' }}
                         >
                           {project.name.charAt(0).toUpperCase()}
                         </div>

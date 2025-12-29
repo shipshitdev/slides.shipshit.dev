@@ -1,18 +1,18 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   Headers,
+  Param,
+  Patch,
+  Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { ProjectsService } from './projects.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { CreateProjectDto } from './dto/create-project.dto';
+import type { UpdateProjectDto } from './dto/update-project.dto';
+import type { ProjectsService } from './projects.service';
 
 @ApiTags('projects')
 @ApiBearerAuth()
@@ -20,22 +20,9 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
-  private getUserId(authHeader: string): string {
-    // In production, this would verify the Clerk JWT and extract the userId
-    // For now, we'll extract it from a custom header set by the frontend
-    if (!authHeader) {
-      throw new UnauthorizedException('No authorization header');
-    }
-    // The frontend will pass the Clerk userId in the header
-    return authHeader.replace('Bearer ', '');
-  }
-
   @Post()
   @ApiOperation({ summary: 'Create a new project' })
-  create(
-    @Headers('x-user-id') userId: string,
-    @Body() createProjectDto: CreateProjectDto,
-  ) {
+  create(@Headers('x-user-id') userId: string, @Body() createProjectDto: CreateProjectDto) {
     if (!userId) {
       throw new UnauthorizedException('User ID required');
     }
@@ -65,7 +52,7 @@ export class ProjectsController {
   update(
     @Headers('x-user-id') userId: string,
     @Param('id') id: string,
-    @Body() updateProjectDto: UpdateProjectDto,
+    @Body() updateProjectDto: UpdateProjectDto
   ) {
     if (!userId) {
       throw new UnauthorizedException('User ID required');

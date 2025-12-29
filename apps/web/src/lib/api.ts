@@ -1,24 +1,24 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 // Add user ID header from Clerk
 export function setAuthHeader(userId: string) {
-  api.defaults.headers.common["x-user-id"] = userId;
+  api.defaults.headers.common['x-user-id'] = userId;
 }
 
 // Projects API
 export const projectsApi = {
-  getAll: () => api.get("/projects"),
+  getAll: () => api.get('/projects'),
   getOne: (id: string) => api.get(`/projects/${id}`),
-  create: (data: CreateProjectInput) => api.post("/projects", data),
+  create: (data: CreateProjectInput) => api.post('/projects', data),
   update: (id: string, data: UpdateProjectInput) => api.patch(`/projects/${id}`, data),
   delete: (id: string) => api.delete(`/projects/${id}`),
 };
@@ -28,14 +28,14 @@ export const decksApi = {
   getByProject: (projectId: string) => api.get(`/decks?projectId=${projectId}`),
   getOne: (id: string) => api.get(`/decks/${id}`),
   getPublic: (slug: string) => api.get(`/decks/public/${slug}`),
-  create: (data: CreateDeckInput) => api.post("/decks", data),
+  create: (data: CreateDeckInput) => api.post('/decks', data),
   update: (id: string, data: UpdateDeckInput) => api.patch(`/decks/${id}`, data),
   delete: (id: string) => api.delete(`/decks/${id}`),
 };
 
 // Branding API
 export const brandingApi = {
-  extract: (url: string) => api.post("/branding/extract", { url }),
+  extract: (url: string) => api.post('/branding/extract', { url }),
 };
 
 // Types
@@ -87,7 +87,7 @@ export interface Deck {
   projectId: string;
   title: string;
   slug: string;
-  audienceType: "cold_leads" | "customers" | "investors" | "custom";
+  audienceType: 'cold_leads' | 'customers' | 'investors' | 'custom';
   slides: SlideContent[];
   theme?: {
     colors?: Record<string, string>;
@@ -101,13 +101,13 @@ export interface Deck {
 export interface CreateDeckInput {
   projectId: string;
   title: string;
-  audienceType: "cold_leads" | "customers" | "investors" | "custom";
+  audienceType: 'cold_leads' | 'customers' | 'investors' | 'custom';
   slides?: SlideContent[];
-  theme?: Deck["theme"];
+  theme?: Deck['theme'];
   isPublic?: boolean;
 }
 
-export interface UpdateDeckInput extends Partial<Omit<CreateDeckInput, "projectId">> {}
+export interface UpdateDeckInput extends Partial<Omit<CreateDeckInput, 'projectId'>> {}
 
 export interface ExtractedBranding {
   logo?: string;

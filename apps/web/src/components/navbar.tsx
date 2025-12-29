@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
-import { Presentation, FolderOpen, Plus } from "lucide-react";
-import { Button } from "./ui/button";
+import { UserButton } from '@clerk/nextjs';
+import { FolderOpen, Plus, Presentation } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from './ui/button';
 
 export function Navbar() {
   return (

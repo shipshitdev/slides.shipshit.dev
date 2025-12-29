@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import Link from "next/link";
-import { X } from "lucide-react";
-import { projectsApi, decksApi, setAuthHeader, type Project, type Deck } from "@/lib/api";
-import { useReveal } from "@/lib/useReveal";
-import { slideComponents } from "@/components/slides/slide-templates";
-import "reveal.js/dist/reveal.css";
-import "reveal.js/dist/theme/white.css";
+import { useUser } from '@clerk/nextjs';
+import { X } from 'lucide-react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { slideComponents } from '@/components/slides/slide-templates';
+import { type Deck, decksApi, type Project, projectsApi, setAuthHeader } from '@/lib/api';
+import { useReveal } from '@/lib/useReveal';
+import 'reveal.js/dist/reveal.css';
+import 'reveal.js/dist/theme/white.css';
 
 export default function PresentPage() {
   const params = useParams();
@@ -28,7 +28,7 @@ export default function PresentPage() {
       setAuthHeader(user.id);
       loadData();
     }
-  }, [isLoaded, user, deckId]);
+  }, [isLoaded, user, loadData]);
 
   async function loadData() {
     try {

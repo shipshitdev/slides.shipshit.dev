@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { decksApi, projectsApi, type Deck, type Project } from "@/lib/api";
-import { useReveal } from "@/lib/useReveal";
-import { slideComponents } from "@/components/slides/slide-templates";
-import "reveal.js/dist/reveal.css";
-import "reveal.js/dist/theme/white.css";
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { slideComponents } from '@/components/slides/slide-templates';
+import { type Deck, decksApi, type Project } from '@/lib/api';
+import { useReveal } from '@/lib/useReveal';
+import 'reveal.js/dist/reveal.css';
+import 'reveal.js/dist/theme/white.css';
 
 export default function PublicPresentationPage() {
   const params = useParams();
   const slug = params.slug as string;
 
   const [deck, setDeck] = useState<Deck | null>(null);
-  const [project, setProject] = useState<Project | null>(null);
+  const [_project, _setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +21,7 @@ export default function PublicPresentationPage() {
 
   useEffect(() => {
     loadData();
-  }, [slug]);
+  }, [loadData]);
 
   async function loadData() {
     try {
@@ -33,17 +33,17 @@ export default function PublicPresentationPage() {
       // Note: For public view, we'd ideally have a public project endpoint
       // For now, we'll use the embedded colors from the deck's theme or defaults
     } catch (err: unknown) {
-      if (err && typeof err === "object" && "response" in err) {
+      if (err && typeof err === 'object' && 'response' in err) {
         const error = err as { response?: { status?: number } };
         if (error.response?.status === 403) {
-          setError("This presentation is private");
+          setError('This presentation is private');
         } else if (error.response?.status === 404) {
-          setError("Presentation not found");
+          setError('Presentation not found');
         } else {
-          setError("Failed to load presentation");
+          setError('Failed to load presentation');
         }
       } else {
-        setError("Failed to load presentation");
+        setError('Failed to load presentation');
       }
       console.error(err);
     } finally {
@@ -63,9 +63,7 @@ export default function PublicPresentationPage() {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900 text-white">
         <h1 className="text-2xl font-bold mb-4">{error}</h1>
-        <p className="text-gray-400">
-          The presentation may have been deleted or made private.
-        </p>
+        <p className="text-gray-400">The presentation may have been deleted or made private.</p>
       </div>
     );
   }
@@ -76,9 +74,9 @@ export default function PublicPresentationPage() {
 
   // Use theme colors from deck or defaults
   const colors = deck.theme?.colors || {
-    primary: "#6366f1",
-    background: "#ffffff",
-    text: "#1a1a1a",
+    primary: '#6366f1',
+    background: '#ffffff',
+    text: '#1a1a1a',
   };
 
   return (

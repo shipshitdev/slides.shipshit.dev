@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import Reveal from "reveal.js";
+import { useEffect, useRef } from 'react';
+import Reveal from 'reveal.js';
 
 interface UseRevealOptions {
   hash?: boolean;
-  transition?: "none" | "fade" | "slide" | "convex" | "concave" | "zoom";
+  transition?: 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom';
   controls?: boolean;
   progress?: boolean;
   center?: boolean;
@@ -21,7 +21,7 @@ export function useReveal(options: UseRevealOptions = {}) {
 
     const deck = new Reveal(deckRef.current, {
       hash: options.hash ?? true,
-      transition: options.transition ?? "slide",
+      transition: options.transition ?? 'slide',
       controls: options.controls ?? true,
       progress: options.progress ?? true,
       center: options.center ?? true,
@@ -43,7 +43,14 @@ export function useReveal(options: UseRevealOptions = {}) {
         revealRef.current = null;
       }
     };
-  }, [options.hash, options.transition, options.controls, options.progress, options.center, options.keyboard]);
+  }, [
+    options.hash,
+    options.transition,
+    options.controls,
+    options.progress,
+    options.center,
+    options.keyboard,
+  ]);
 
   return { deckRef, revealRef };
 }

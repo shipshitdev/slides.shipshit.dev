@@ -8,16 +8,27 @@
   "scripts": {
     "pre:install": "bun update --latest --recursive && bun install",
     "prepare:deploy": "bun install",
-    "dev": "bun --filter '*' run dev",
-    "dev:api": "bun --filter api run dev",
-    "dev:web": "bun --filter web run dev",
+    "dev": "bun run --filter ./apps/api dev & bun run --filter ./apps/web dev",
+    "dev:api": "bun run --filter api dev",
+    "dev:web": "bun run --filter web dev",
     "build": "bun --filter '*' run build",
     "start": "bun --filter '*' run start",
-    "lint": "bun --filter '*' run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,html,yml,yaml}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,mdx,css,html,yml,yaml}\""
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint:fix": "biome lint --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "prettier": "^3.4.2"
+    "@biomejs/biome": "2.3.10",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": [
+      "biome check --write"
+    ]
   }
 }

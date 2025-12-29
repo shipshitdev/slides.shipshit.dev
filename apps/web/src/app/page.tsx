@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Presentation, Zap, Share2, FileDown } from "lucide-react";
+import { FileDown, Presentation, Share2, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -39,8 +39,8 @@ export default function Home() {
             <span className="text-[var(--primary)]">in minutes</span>
           </h1>
           <p className="text-xl text-[var(--muted-foreground)] mb-8">
-            Build professional presentations for investors, customers, and leads.
-            Auto-extract your branding, share with a link, and export to PDF.
+            Build professional presentations for investors, customers, and leads. Auto-extract your
+            branding, share with a link, and export to PDF.
           </p>
           <div className="flex justify-center gap-4">
             <Link
@@ -66,7 +66,8 @@ export default function Home() {
             </div>
             <h3 className="font-semibold text-lg mb-2">Auto Branding</h3>
             <p className="text-[var(--muted-foreground)]">
-              Enter your website URL and we&apos;ll extract your logo, colors, and fonts automatically.
+              Enter your website URL and we&apos;ll extract your logo, colors, and fonts
+              automatically.
             </p>
           </div>
           <div className="text-center p-6">
@@ -97,10 +98,10 @@ export default function Home() {
           </p>
           <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { name: "Cold Leads", desc: "Quick hook & intro" },
-              { name: "Customers", desc: "Problem & solution" },
-              { name: "Investors", desc: "Traction & financials" },
-              { name: "Custom", desc: "Build from scratch" },
+              { name: 'Cold Leads', desc: 'Quick hook & intro' },
+              { name: 'Customers', desc: 'Problem & solution' },
+              { name: 'Investors', desc: 'Traction & financials' },
+              { name: 'Custom', desc: 'Build from scratch' },
             ].map((type) => (
               <div
                 key={type.name}

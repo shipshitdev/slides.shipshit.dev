@@ -1,8 +1,7 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { IsUrl } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { BrandingService } from './branding.service';
+import type { BrandingService } from './branding.service';
 
 class ExtractBrandingDto {
   @ApiProperty({ description: 'URL to extract branding from' })

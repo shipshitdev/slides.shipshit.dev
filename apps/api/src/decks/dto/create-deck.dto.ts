@@ -1,12 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsString,
-  IsOptional,
-  IsBoolean,
-  IsArray,
-  IsEnum,
-  IsObject,
-} from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsObject, IsOptional, IsString } from 'class-validator';
 
 export class SlideContentDto {
   @ApiProperty()

@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
   Headers,
+  Param,
+  Patch,
+  Post,
   Query,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
-import { DecksService } from './decks.service';
-import { CreateDeckDto } from './dto/create-deck.dto';
-import { UpdateDeckDto } from './dto/update-deck.dto';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import type { DecksService } from './decks.service';
+import type { CreateDeckDto } from './dto/create-deck.dto';
+import type { UpdateDeckDto } from './dto/update-deck.dto';
 
 @ApiTags('decks')
 @Controller('decks')
@@ -23,10 +23,7 @@ export class DecksController {
   @Post()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new deck' })
-  create(
-    @Headers('x-user-id') userId: string,
-    @Body() createDeckDto: CreateDeckDto,
-  ) {
+  create(@Headers('x-user-id') userId: string, @Body() createDeckDto: CreateDeckDto) {
     if (!userId) {
       throw new UnauthorizedException('User ID required');
     }
@@ -37,10 +34,7 @@ export class DecksController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all decks for a project' })
   @ApiQuery({ name: 'projectId', required: true })
-  findAll(
-    @Headers('x-user-id') userId: string,
-    @Query('projectId') projectId: string,
-  ) {
+  findAll(@Headers('x-user-id') userId: string, @Query('projectId') projectId: string) {
     if (!userId) {
       throw new UnauthorizedException('User ID required');
     }
@@ -69,7 +63,7 @@ export class DecksController {
   update(
     @Headers('x-user-id') userId: string,
     @Param('id') id: string,
-    @Body() updateDeckDto: UpdateDeckDto,
+    @Body() updateDeckDto: UpdateDeckDto
   ) {
     if (!userId) {
       throw new UnauthorizedException('User ID required');

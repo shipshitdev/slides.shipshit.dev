@@ -1,48 +1,36 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import Link from "next/link";
+import { useUser } from '@clerk/nextjs';
+import { ArrowLeft, Eye, EyeOff, Loader2, Play, Save, Share2, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { slideComponents } from '@/components/slides/slide-templates';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
-  ArrowLeft,
-  Plus,
-  Trash2,
-  Save,
-  Play,
-  Eye,
-  EyeOff,
-  GripVertical,
-  Share2,
-  Loader2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import {
-  projectsApi,
-  decksApi,
-  setAuthHeader,
-  type Project,
   type Deck,
+  decksApi,
+  type Project,
+  projectsApi,
   type SlideContent,
-} from "@/lib/api";
-import { slideComponents } from "@/components/slides/slide-templates";
-import { cn } from "@/lib/utils";
+  setAuthHeader,
+} from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 const slideTypes = [
-  { value: "title", label: "Title" },
-  { value: "content", label: "Content" },
-  { value: "stats", label: "Stats" },
-  { value: "team", label: "Team" },
-  { value: "quote", label: "Quote" },
-  { value: "cta", label: "CTA" },
-  { value: "image", label: "Image" },
+  { value: 'title', label: 'Title' },
+  { value: 'content', label: 'Content' },
+  { value: 'stats', label: 'Stats' },
+  { value: 'team', label: 'Team' },
+  { value: 'quote', label: 'Quote' },
+  { value: 'cta', label: 'CTA' },
+  { value: 'image', label: 'Image' },
 ];
 
 export default function DeckEditorPage() {
   const params = useParams();
-  const router = useRouter();
+  const _router = useRouter();
   const { user, isLoaded } = useUser();
   const projectId = params.projectId as string;
   const deckId = params.deckId as string;
@@ -60,7 +48,7 @@ export default function DeckEditorPage() {
       setAuthHeader(user.id);
       loadData();
     }
-  }, [isLoaded, user, deckId]);
+  }, [isLoaded, user, loadData]);
 
   async function loadData() {
     try {
@@ -130,7 +118,7 @@ export default function DeckEditorPage() {
     setHasChanges(true);
   }
 
-  function moveSlide(fromIndex: number, toIndex: number) {
+  function _moveSlide(fromIndex: number, toIndex: number) {
     const newSlides = [...slides];
     const [removed] = newSlides.splice(fromIndex, 1);
     newSlides.splice(toIndex, 0, removed);
@@ -204,7 +192,11 @@ export default function DeckEditorPage() {
             </Button>
           )}
           <Button variant="outline" size="sm" onClick={handleSave} disabled={saving || !hasChanges}>
-            {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Save className="h-4 w-4 mr-1" />}
+            {saving ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4 mr-1" />
+            )}
             Save
           </Button>
           <Link href={`/projects/${projectId}/decks/${deckId}/present`}>
@@ -225,10 +217,10 @@ export default function DeckEditorPage() {
                 key={slide.id}
                 onClick={() => setSelectedSlideIndex(index)}
                 className={cn(
-                  "relative aspect-video rounded-lg border cursor-pointer overflow-hidden group",
+                  'relative aspect-video rounded-lg border cursor-pointer overflow-hidden group',
                   index === selectedSlideIndex
-                    ? "border-[var(--primary)] ring-2 ring-[var(--primary)]/20"
-                    : "border-[var(--border)] hover:border-[var(--primary)]/50"
+                    ? 'border-[var(--primary)] ring-2 ring-[var(--primary)]/20'
+                    : 'border-[var(--border)] hover:border-[var(--primary)]/50'
                 )}
               >
                 <div className="absolute inset-0 scale-[0.2] origin-top-left w-[500%] h-[500%]">
@@ -316,60 +308,60 @@ function SlideEditor({
   return (
     <div className="grid grid-cols-2 gap-4">
       {/* Title field - most slides have this */}
-      {["title", "content", "stats", "team", "cta", "image"].includes(slide.type) && (
+      {['title', 'content', 'stats', 'team', 'cta', 'image'].includes(slide.type) && (
         <div className="space-y-1">
           <label className="text-xs font-medium">Title</label>
           <Input
-            value={String(data.title || "")}
-            onChange={(e) => updateField("title", e.target.value)}
+            value={String(data.title || '')}
+            onChange={(e) => updateField('title', e.target.value)}
             placeholder="Slide title..."
           />
         </div>
       )}
 
       {/* Subtitle for title slides */}
-      {slide.type === "title" && (
+      {slide.type === 'title' && (
         <div className="space-y-1">
           <label className="text-xs font-medium">Subtitle</label>
           <Input
-            value={String(data.subtitle || "")}
-            onChange={(e) => updateField("subtitle", e.target.value)}
+            value={String(data.subtitle || '')}
+            onChange={(e) => updateField('subtitle', e.target.value)}
             placeholder="Tagline or subtitle..."
           />
         </div>
       )}
 
       {/* Bullets for content slides */}
-      {slide.type === "content" && (
+      {slide.type === 'content' && (
         <div className="col-span-2 space-y-1">
           <label className="text-xs font-medium">Bullet Points (one per line)</label>
           <textarea
             className="w-full h-24 rounded-md border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
-            value={((data.bullets as string[]) || []).join("\n")}
-            onChange={(e) => updateField("bullets", e.target.value.split("\n").filter(Boolean))}
+            value={((data.bullets as string[]) || []).join('\n')}
+            onChange={(e) => updateField('bullets', e.target.value.split('\n').filter(Boolean))}
             placeholder="Enter bullet points..."
           />
         </div>
       )}
 
       {/* Stats */}
-      {slide.type === "stats" && (
+      {slide.type === 'stats' && (
         <div className="col-span-2 space-y-1">
           <label className="text-xs font-medium">Stats (value|label, one per line)</label>
           <textarea
             className="w-full h-24 rounded-md border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
             value={((data.stats as Array<{ value: string; label: string }>) || [])
               .map((s) => `${s.value}|${s.label}`)
-              .join("\n")}
+              .join('\n')}
             onChange={(e) =>
               updateField(
-                "stats",
+                'stats',
                 e.target.value
-                  .split("\n")
+                  .split('\n')
                   .filter(Boolean)
                   .map((line) => {
-                    const [value, label] = line.split("|");
-                    return { value: value?.trim() || "", label: label?.trim() || "" };
+                    const [value, label] = line.split('|');
+                    return { value: value?.trim() || '', label: label?.trim() || '' };
                   })
               )
             }
@@ -379,30 +371,30 @@ function SlideEditor({
       )}
 
       {/* Quote */}
-      {slide.type === "quote" && (
+      {slide.type === 'quote' && (
         <>
           <div className="col-span-2 space-y-1">
             <label className="text-xs font-medium">Quote</label>
             <textarea
               className="w-full h-16 rounded-md border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
-              value={String(data.quote || "")}
-              onChange={(e) => updateField("quote", e.target.value)}
+              value={String(data.quote || '')}
+              onChange={(e) => updateField('quote', e.target.value)}
               placeholder="The quote text..."
             />
           </div>
           <div className="space-y-1">
             <label className="text-xs font-medium">Author</label>
             <Input
-              value={String(data.author || "")}
-              onChange={(e) => updateField("author", e.target.value)}
+              value={String(data.author || '')}
+              onChange={(e) => updateField('author', e.target.value)}
               placeholder="Author name"
             />
           </div>
           <div className="space-y-1">
             <label className="text-xs font-medium">Role</label>
             <Input
-              value={String(data.role || "")}
-              onChange={(e) => updateField("role", e.target.value)}
+              value={String(data.role || '')}
+              onChange={(e) => updateField('role', e.target.value)}
               placeholder="CEO, Company"
             />
           </div>
@@ -410,21 +402,21 @@ function SlideEditor({
       )}
 
       {/* CTA */}
-      {slide.type === "cta" && (
+      {slide.type === 'cta' && (
         <>
           <div className="space-y-1">
             <label className="text-xs font-medium">Button Text</label>
             <Input
-              value={String(data.buttonText || "")}
-              onChange={(e) => updateField("buttonText", e.target.value)}
+              value={String(data.buttonText || '')}
+              onChange={(e) => updateField('buttonText', e.target.value)}
               placeholder="Get Started"
             />
           </div>
           <div className="space-y-1">
             <label className="text-xs font-medium">Description</label>
             <Input
-              value={String(data.description || "")}
-              onChange={(e) => updateField("description", e.target.value)}
+              value={String(data.description || '')}
+              onChange={(e) => updateField('description', e.target.value)}
               placeholder="Optional description..."
             />
           </div>
@@ -432,21 +424,21 @@ function SlideEditor({
       )}
 
       {/* Image */}
-      {slide.type === "image" && (
+      {slide.type === 'image' && (
         <>
           <div className="col-span-2 space-y-1">
             <label className="text-xs font-medium">Image URL</label>
             <Input
-              value={String(data.imageUrl || "")}
-              onChange={(e) => updateField("imageUrl", e.target.value)}
+              value={String(data.imageUrl || '')}
+              onChange={(e) => updateField('imageUrl', e.target.value)}
               placeholder="https://..."
             />
           </div>
           <div className="space-y-1">
             <label className="text-xs font-medium">Caption</label>
             <Input
-              value={String(data.caption || "")}
-              onChange={(e) => updateField("caption", e.target.value)}
+              value={String(data.caption || '')}
+              onChange={(e) => updateField('caption', e.target.value)}
               placeholder="Image caption..."
             />
           </div>
@@ -458,20 +450,20 @@ function SlideEditor({
 
 function getDefaultData(type: string): Record<string, unknown> {
   switch (type) {
-    case "title":
-      return { title: "New Slide", subtitle: "" };
-    case "content":
-      return { title: "Content", bullets: ["Point 1", "Point 2"] };
-    case "stats":
-      return { title: "Stats", stats: [{ value: "100", label: "Metric" }] };
-    case "team":
-      return { title: "Team", members: [] };
-    case "quote":
-      return { quote: "Quote text", author: "Author" };
-    case "cta":
-      return { title: "Get Started", buttonText: "Contact Us" };
-    case "image":
-      return { title: "", imageUrl: "", caption: "" };
+    case 'title':
+      return { title: 'New Slide', subtitle: '' };
+    case 'content':
+      return { title: 'Content', bullets: ['Point 1', 'Point 2'] };
+    case 'stats':
+      return { title: 'Stats', stats: [{ value: '100', label: 'Metric' }] };
+    case 'team':
+      return { title: 'Team', members: [] };
+    case 'quote':
+      return { quote: 'Quote text', author: 'Author' };
+    case 'cta':
+      return { title: 'Get Started', buttonText: 'Contact Us' };
+    case 'image':
+      return { title: '', imageUrl: '', caption: '' };
     default:
       return {};
   }

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ProjectsModule } from './projects/projects.module';
-import { DecksModule } from './decks/decks.module';
 import { BrandingModule } from './branding/branding.module';
+import { DecksModule } from './decks/decks.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [

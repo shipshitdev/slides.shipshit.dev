@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import { ArrowLeft, Loader2, Wand2 } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { projectsApi, brandingApi, setAuthHeader, type CreateProjectInput } from "@/lib/api";
+import { useUser } from '@clerk/nextjs';
+import { ArrowLeft, Loader2, Wand2 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { brandingApi, type CreateProjectInput, projectsApi, setAuthHeader } from '@/lib/api';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -18,20 +18,20 @@ export default function NewProjectPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<CreateProjectInput>({
-    name: "",
-    description: "",
-    websiteUrl: "",
-    logo: "",
+    name: '',
+    description: '',
+    websiteUrl: '',
+    logo: '',
     colors: {
-      primary: "#6366f1",
-      secondary: "#f1f5f9",
-      accent: "#10b981",
-      background: "#ffffff",
-      text: "#1a1a1a",
+      primary: '#6366f1',
+      secondary: '#f1f5f9',
+      accent: '#10b981',
+      background: '#ffffff',
+      text: '#1a1a1a',
     },
     fonts: {
-      heading: "Inter",
-      body: "Inter",
+      heading: 'Inter',
+      body: 'Inter',
     },
   });
 
@@ -46,8 +46,8 @@ export default function NewProjectPage() {
 
       setFormData((prev) => ({
         ...prev,
-        name: prev.name || branding.metadata?.title || "",
-        description: prev.description || branding.metadata?.description || "",
+        name: prev.name || branding.metadata?.title || '',
+        description: prev.description || branding.metadata?.description || '',
         logo: branding.logo || prev.logo,
         colors: {
           ...prev.colors,
@@ -59,7 +59,7 @@ export default function NewProjectPage() {
         },
       }));
     } catch (err) {
-      setError("Failed to extract branding. Check the URL and try again.");
+      setError('Failed to extract branding. Check the URL and try again.');
       console.error(err);
     } finally {
       setExtracting(false);
@@ -77,7 +77,7 @@ export default function NewProjectPage() {
       const response = await projectsApi.create(formData);
       router.push(`/projects/${response.data._id}`);
     } catch (err) {
-      setError("Failed to create project. Please try again.");
+      setError('Failed to create project. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -98,8 +98,8 @@ export default function NewProjectPage() {
         <CardHeader>
           <CardTitle>Create New Project</CardTitle>
           <CardDescription>
-            Set up a new project for your startup or product. You can auto-extract
-            branding from your website.
+            Set up a new project for your startup or product. You can auto-extract branding from
+            your website.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -118,9 +118,7 @@ export default function NewProjectPage() {
                   type="url"
                   placeholder="https://yourcompany.com"
                   value={formData.websiteUrl}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, websiteUrl: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((prev) => ({ ...prev, websiteUrl: e.target.value }))}
                 />
                 <Button
                   type="button"
@@ -148,9 +146,7 @@ export default function NewProjectPage() {
                 required
                 placeholder="My Startup"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
+                onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
               />
             </div>
 
@@ -161,9 +157,7 @@ export default function NewProjectPage() {
                 className="flex min-h-[80px] w-full rounded-md border border-[var(--border)] bg-transparent px-3 py-2 text-sm placeholder:text-[var(--muted-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
                 placeholder="Brief description of your project..."
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, description: e.target.value }))
-                }
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               />
             </div>
 
@@ -171,7 +165,7 @@ export default function NewProjectPage() {
             <div className="space-y-2">
               <label className="text-sm font-medium">Brand Colors</label>
               <div className="grid grid-cols-5 gap-3">
-                {(["primary", "secondary", "accent", "background", "text"] as const).map(
+                {(['primary', 'secondary', 'accent', 'background', 'text'] as const).map(
                   (color) => (
                     <div key={color} className="space-y-1">
                       <label className="text-xs text-[var(--muted-foreground)] capitalize">
@@ -180,7 +174,7 @@ export default function NewProjectPage() {
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
-                          value={formData.colors?.[color] || "#000000"}
+                          value={formData.colors?.[color] || '#000000'}
                           onChange={(e) =>
                             setFormData((prev) => ({
                               ...prev,
@@ -210,7 +204,7 @@ export default function NewProjectPage() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setFormData((prev) => ({ ...prev, logo: "" }))}
+                    onClick={() => setFormData((prev) => ({ ...prev, logo: '' }))}
                   >
                     Remove
                   </Button>

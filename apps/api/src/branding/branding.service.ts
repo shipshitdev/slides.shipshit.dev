@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -36,8 +36,7 @@ export class BrandingService {
       const response = await axios.get(url, {
         timeout: 10000,
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (compatible; PitchDeckBot/1.0; +https://pitchdeck.app)',
+          'User-Agent': 'Mozilla/5.0 (compatible; PitchDeckBot/1.0; +https://pitchdeck.app)',
         },
       });
 
@@ -67,7 +66,7 @@ export class BrandingService {
         throw error;
       }
       throw new BadRequestException(
-        `Failed to extract branding: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to extract branding: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
@@ -103,8 +102,7 @@ export class BrandingService {
 
     // Try favicon as fallback
     const favicon =
-      $('link[rel="icon"]').attr('href') ||
-      $('link[rel="shortcut icon"]').attr('href');
+      $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href');
     if (favicon) {
       if (favicon.startsWith('/')) {
         return `${baseUrl}${favicon}`;
@@ -115,15 +113,11 @@ export class BrandingService {
     return undefined;
   }
 
-  private extractColors(
-    $: cheerio.CheerioAPI,
-    html: string,
-  ): ExtractedBranding['colors'] {
+  private extractColors($: cheerio.CheerioAPI, html: string): ExtractedBranding['colors'] {
     const colors: ExtractedBranding['colors'] = {};
 
     // Extract colors from inline styles and style tags
-    const colorRegex =
-      /#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)/g;
+    const colorRegex = /#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)/g;
     const foundColors = new Map<string, number>();
 
     // Get colors from style tags
@@ -221,10 +215,7 @@ export class BrandingService {
     return fonts;
   }
 
-  private extractMetadata(
-    $: cheerio.CheerioAPI,
-    baseUrl: string,
-  ): ExtractedBranding['metadata'] {
+  private extractMetadata($: cheerio.CheerioAPI, baseUrl: string): ExtractedBranding['metadata'] {
     const title = $('title').text().trim() || $('meta[property="og:title"]').attr('content');
     const description =
       $('meta[name="description"]').attr('content') ||

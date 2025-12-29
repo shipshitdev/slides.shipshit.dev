@@ -1,4 +1,4 @@
-export type AudienceType = "cold_leads" | "customers" | "investors" | "custom";
+export type AudienceType = 'cold_leads' | 'customers' | 'investors' | 'custom';
 
 export interface ProjectColors {
   primary: string;
@@ -20,14 +20,14 @@ export interface SlideContent {
 }
 
 export type SlideType =
-  | "title"
-  | "content"
-  | "image"
-  | "stats"
-  | "team"
-  | "quote"
-  | "comparison"
-  | "cta";
+  | 'title'
+  | 'content'
+  | 'image'
+  | 'stats'
+  | 'team'
+  | 'quote'
+  | 'comparison'
+  | 'cta';
 
 export interface TitleSlideData {
   title: string;
@@ -39,7 +39,7 @@ export interface ContentSlideData {
   title: string;
   bullets: string[];
   image?: string;
-  imagePosition?: "left" | "right";
+  imagePosition?: 'left' | 'right';
 }
 
 export interface ImageSlideData {
