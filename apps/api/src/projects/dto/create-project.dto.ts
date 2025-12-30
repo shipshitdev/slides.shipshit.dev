@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsObject, IsOptional, IsString, IsUrl, ValidateIf, ValidateNested } from 'class-validator';
 
 export class ProjectColorsDto {
   @ApiPropertyOptional()
@@ -46,12 +47,15 @@ export class CreateProjectDto {
   name: string;
 
   @ApiPropertyOptional({ description: 'Project description' })
-  @IsOptional()
   @IsString()
+  @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   description?: string;
 
   @ApiPropertyOptional({ description: 'Website URL to extract branding from' })
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
+  @ValidateIf((o) => o.websiteUrl !== undefined && o.websiteUrl !== '')
   @IsUrl()
   websiteUrl?: string;
 
@@ -60,13 +64,17 @@ export class CreateProjectDto {
   @IsString()
   logo?: string;
 
-  @ApiPropertyOptional({ description: 'Brand colors' })
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Brand colors', type: ProjectColorsDto })
   @IsObject()
+  @ValidateNested()
+  @Type(() => ProjectColorsDto)
+  @IsOptional()
   colors?: ProjectColorsDto;
 
-  @ApiPropertyOptional({ description: 'Brand fonts' })
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Brand fonts', type: ProjectFontsDto })
   @IsObject()
+  @ValidateNested()
+  @Type(() => ProjectFontsDto)
+  @IsOptional()
   fonts?: ProjectFontsDto;
 }

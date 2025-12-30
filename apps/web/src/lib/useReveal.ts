@@ -10,6 +10,7 @@ interface UseRevealOptions {
   progress?: boolean;
   center?: boolean;
   keyboard?: boolean;
+  ready?: boolean; // Dependency to trigger initialization when content is ready
 }
 
 export function useReveal(options: UseRevealOptions = {}) {
@@ -17,20 +18,36 @@ export function useReveal(options: UseRevealOptions = {}) {
   const revealRef = useRef<Reveal.Api | null>(null);
 
   useEffect(() => {
-    if (!deckRef.current || revealRef.current) return;
+    // Wait for content to be ready if the ready option is provided
+    if (options.ready !== undefined && !options.ready) return;
+    
+    if (!deckRef.current) return;
+
+    // Destroy existing instance if re-initializing
+    if (revealRef.current) {
+      revealRef.current.destroy();
+      revealRef.current = null;
+    }
+
+    // Check if slides container has content
+    const slidesContainer = deckRef.current.querySelector('.slides');
+    if (!slidesContainer || slidesContainer.children.length === 0) {
+      return;
+    }
 
     const deck = new Reveal(deckRef.current, {
       hash: options.hash ?? true,
       transition: options.transition ?? 'slide',
       controls: options.controls ?? true,
       progress: options.progress ?? true,
-      center: options.center ?? true,
+      center: options.center ?? false,
       keyboard: options.keyboard ?? true,
-      width: 1920,
-      height: 1080,
+      embedded: false,
       margin: 0,
-      minScale: 0.2,
-      maxScale: 2.0,
+      minScale: 1,
+      maxScale: 1,
+      width: '100%',
+      height: '100%',
     });
 
     deck.initialize().then(() => {
@@ -50,6 +67,7 @@ export function useReveal(options: UseRevealOptions = {}) {
     options.progress,
     options.center,
     options.keyboard,
+    options.ready,
   ]);
 
   return { deckRef, revealRef };

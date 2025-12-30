@@ -74,7 +74,16 @@ export default function NewProjectPage() {
       setLoading(true);
       setError(null);
       setAuthHeader(user.id);
-      const response = await projectsApi.create(formData);
+      
+      // Clean up empty strings - convert to undefined for optional fields
+      const cleanedData: CreateProjectInput = {
+        ...formData,
+        websiteUrl: formData.websiteUrl || undefined,
+        description: formData.description || undefined,
+        logo: formData.logo || undefined,
+      };
+      
+      const response = await projectsApi.create(cleanedData);
       router.push(`/projects/${response.data._id}`);
     } catch (err) {
       setError('Failed to create project. Please try again.');

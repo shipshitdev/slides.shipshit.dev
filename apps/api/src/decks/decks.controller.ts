@@ -11,9 +11,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { DecksService } from './decks.service';
-import type { CreateDeckDto } from './dto/create-deck.dto';
-import type { UpdateDeckDto } from './dto/update-deck.dto';
+import { DecksService } from './decks.service';
+import { CreateDeckDto } from './dto/create-deck.dto';
+import { UpdateDeckDto } from './dto/update-deck.dto';
 
 @ApiTags('decks')
 @Controller('decks')

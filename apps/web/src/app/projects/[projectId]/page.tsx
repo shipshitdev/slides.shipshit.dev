@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { type Deck, decksApi, type Project, projectsApi, setAuthHeader } from '@/lib/api';
@@ -44,14 +44,7 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isLoaded && user) {
-      setAuthHeader(user.id);
-      loadData();
-    }
-  }, [isLoaded, user, loadData]);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [projectRes, decksRes] = await Promise.all([
@@ -66,7 +59,14 @@ export default function ProjectDetailPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      setAuthHeader(user.id);
+      loadData();
+    }
+  }, [isLoaded, user, loadData]);
 
   async function handleDeleteDeck(deckId: string) {
     if (!confirm('Are you sure you want to delete this deck?')) return;
@@ -228,6 +228,8 @@ export default function ProjectDetailPage() {
                     </Link>
                     <Link
                       href={`/projects/${projectId}/decks/${deck._id}/present`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1"
                     >
                       <Button size="sm" className="w-full">

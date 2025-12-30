@@ -1,22 +1,26 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
-import { ArrowLeft, Eye, EyeOff, Loader2, Play, Save, Share2, Trash2 } from 'lucide-react';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { GoogleFontLoader } from '@/components/slides/google-font-loader';
 import { slideComponents } from '@/components/slides/slide-templates';
+import { SortableBulletList } from '@/components/slides/sortable-bullet-list';
+import { SortableSlideList } from '@/components/slides/sortable-slide-list';
+import { SortableStatsList } from '@/components/slides/sortable-stats-list';
 import { Button } from '@/components/ui/button';
+import { FontSelect } from '@/components/ui/font-select';
 import { Input } from '@/components/ui/input';
 import {
   type Deck,
   decksApi,
   type Project,
   projectsApi,
-  type SlideContent,
   setAuthHeader,
+  type SlideContent,
 } from '@/lib/api';
-import { cn } from '@/lib/utils';
+import { useUser } from '@clerk/nextjs';
+import { ArrowLeft, Eye, EyeOff, Loader2, Play, Save, Share2 } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const slideTypes = [
   { value: 'title', label: 'Title' },
@@ -42,15 +46,11 @@ export default function DeckEditorPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [deckTheme, setDeckTheme] = useState<Deck['theme']>({});
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isInitialLoadRef = useRef(true);
 
-  useEffect(() => {
-    if (isLoaded && user) {
-      setAuthHeader(user.id);
-      loadData();
-    }
-  }, [isLoaded, user, loadData]);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const [projectRes, deckRes] = await Promise.all([
@@ -60,25 +60,84 @@ export default function DeckEditorPage() {
       setProject(projectRes.data);
       setDeck(deckRes.data);
       setSlides(deckRes.data.slides || []);
+      setDeckTheme(deckRes.data.theme || {});
+      isInitialLoadRef.current = true;
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }
+  }, [projectId, deckId]);
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      setAuthHeader(user.id);
+      loadData();
+    }
+  }, [isLoaded, user, loadData]);
+
+  // Auto-save when slides change (debounced)
+  useEffect(() => {
+    // Skip auto-save on initial load
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false;
+      return;
+    }
+
+    // Skip if no deck or no changes
+    if (!deck || !hasChanges) {
+      return;
+    }
+
+    // Clear existing timeout
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    // Set new timeout for auto-save (1 second debounce)
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        setSaving(true);
+        await decksApi.update(deckId, { slides, theme: deckTheme });
+        setHasChanges(false);
+      } catch (err) {
+        console.error('Auto-save failed:', err);
+      } finally {
+        setSaving(false);
+      }
+    }, 1000);
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [slides, deckTheme, deck, deckId, hasChanges]);
 
   async function handleSave() {
     if (!deck) return;
 
     try {
       setSaving(true);
-      await decksApi.update(deckId, { slides });
+      await decksApi.update(deckId, { slides, theme: deckTheme });
       setHasChanges(false);
     } catch (err) {
       console.error(err);
     } finally {
       setSaving(false);
     }
+  }
+
+  function updateThemeFonts(fonts: { heading?: string; body?: string }) {
+    setDeckTheme((prev) => ({
+      ...prev,
+      fonts: {
+        ...prev.fonts,
+        ...fonts,
+      },
+    }));
+    setHasChanges(true);
   }
 
   async function togglePublic() {
@@ -118,7 +177,7 @@ export default function DeckEditorPage() {
     setHasChanges(true);
   }
 
-  function _moveSlide(fromIndex: number, toIndex: number) {
+  function moveSlide(fromIndex: number, toIndex: number) {
     const newSlides = [...slides];
     const [removed] = newSlides.splice(fromIndex, 1);
     newSlides.splice(toIndex, 0, removed);
@@ -148,8 +207,14 @@ export default function DeckEditorPage() {
     );
   }
 
+  const fonts = {
+    heading: deckTheme.fonts?.heading || project.fonts?.heading || 'Inter',
+    body: deckTheme.fonts?.body || project.fonts?.body || 'Inter',
+  };
+
   return (
     <div className="h-screen flex flex-col">
+      <GoogleFontLoader fonts={fonts} />
       {/* Header */}
       <header className="border-b border-[var(--border)] px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -165,6 +230,20 @@ export default function DeckEditorPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <div className="flex items-end gap-2 pr-2 border-r border-[var(--border)]">
+            <FontSelect
+              value={deckTheme.fonts?.heading || project.fonts?.heading || 'Inter'}
+              onChange={(font) => updateThemeFonts({ heading: font })}
+              label="Heading"
+              className="w-32"
+            />
+            <FontSelect
+              value={deckTheme.fonts?.body || project.fonts?.body || 'Inter'}
+              onChange={(font) => updateThemeFonts({ body: font })}
+              label="Body"
+              className="w-32"
+            />
+          </div>
           <Button variant="ghost" size="sm" onClick={togglePublic}>
             {deck.isPublic ? (
               <>
@@ -199,7 +278,11 @@ export default function DeckEditorPage() {
             )}
             Save
           </Button>
-          <Link href={`/projects/${projectId}/decks/${deckId}/present`}>
+          <Link
+            href={`/projects/${projectId}/decks/${deckId}/present`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Button size="sm">
               <Play className="h-4 w-4 mr-1" />
               Present
@@ -211,43 +294,16 @@ export default function DeckEditorPage() {
       <div className="flex-1 flex overflow-hidden">
         {/* Slide List */}
         <aside className="w-64 border-r border-[var(--border)] overflow-y-auto p-4">
-          <div className="space-y-2">
-            {slides.map((slide, index) => (
-              <div
-                key={slide.id}
-                onClick={() => setSelectedSlideIndex(index)}
-                className={cn(
-                  'relative aspect-video rounded-lg border cursor-pointer overflow-hidden group',
-                  index === selectedSlideIndex
-                    ? 'border-[var(--primary)] ring-2 ring-[var(--primary)]/20'
-                    : 'border-[var(--border)] hover:border-[var(--primary)]/50'
-                )}
-              >
-                <div className="absolute inset-0 scale-[0.2] origin-top-left w-[500%] h-[500%]">
-                  {SlideComponent && (
-                    <div className="w-full h-full">
-                      {(() => {
-                        const Comp = slideComponents[slide.type] || slideComponents.content;
-                        return <Comp data={slide.data} colors={project.colors} />;
-                      })()}
-                    </div>
-                  )}
-                </div>
-                <div className="absolute bottom-1 left-1 text-[10px] bg-black/50 text-white px-1 rounded">
-                  {index + 1}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteSlide(index);
-                  }}
-                  className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
-          </div>
+          <SortableSlideList
+            slides={slides}
+            selectedSlideIndex={selectedSlideIndex}
+            projectColors={project.colors}
+            projectFonts={project.fonts}
+            deckFonts={deckTheme.fonts}
+            onSelectSlide={setSelectedSlideIndex}
+            onDeleteSlide={deleteSlide}
+            onReorderSlides={moveSlide}
+          />
 
           {/* Add Slide */}
           <div className="mt-4 pt-4 border-t border-[var(--border)]">
@@ -272,7 +328,7 @@ export default function DeckEditorPage() {
           <div className="flex-1 flex items-center justify-center p-8">
             {selectedSlide && SlideComponent && (
               <div className="w-full max-w-4xl aspect-video rounded-lg overflow-hidden shadow-2xl">
-                <SlideComponent data={selectedSlide.data} colors={project.colors} />
+                <SlideComponent data={selectedSlide.data} colors={project.colors} fonts={fonts} />
               </div>
             )}
           </div>
@@ -334,12 +390,10 @@ function SlideEditor({
       {/* Bullets for content slides */}
       {slide.type === 'content' && (
         <div className="col-span-2 space-y-1">
-          <label className="text-xs font-medium">Bullet Points (one per line)</label>
-          <textarea
-            className="w-full h-24 rounded-md border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
-            value={((data.bullets as string[]) || []).join('\n')}
-            onChange={(e) => updateField('bullets', e.target.value.split('\n').filter(Boolean))}
-            placeholder="Enter bullet points..."
+          <label className="text-xs font-medium">Bullet Points</label>
+          <SortableBulletList
+            bullets={(data.bullets as string[]) || []}
+            onBulletsChange={(bullets) => updateField('bullets', bullets)}
           />
         </div>
       )}
@@ -347,25 +401,10 @@ function SlideEditor({
       {/* Stats */}
       {slide.type === 'stats' && (
         <div className="col-span-2 space-y-1">
-          <label className="text-xs font-medium">Stats (value|label, one per line)</label>
-          <textarea
-            className="w-full h-24 rounded-md border border-[var(--border)] bg-transparent px-3 py-2 text-sm"
-            value={((data.stats as Array<{ value: string; label: string }>) || [])
-              .map((s) => `${s.value}|${s.label}`)
-              .join('\n')}
-            onChange={(e) =>
-              updateField(
-                'stats',
-                e.target.value
-                  .split('\n')
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [value, label] = line.split('|');
-                    return { value: value?.trim() || '', label: label?.trim() || '' };
-                  })
-              )
-            }
-            placeholder="10x|Faster&#10;$1M|Revenue"
+          <label className="text-xs font-medium">Stats</label>
+          <SortableStatsList
+            stats={(data.stats as Array<{ value: string; label: string }>) || []}
+            onStatsChange={(stats) => updateField('stats', stats)}
           />
         </div>
       )}
@@ -410,6 +449,14 @@ function SlideEditor({
               value={String(data.buttonText || '')}
               onChange={(e) => updateField('buttonText', e.target.value)}
               placeholder="Get Started"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium">Button Link (URL)</label>
+            <Input
+              value={String(data.buttonUrl || '')}
+              onChange={(e) => updateField('buttonUrl', e.target.value)}
+              placeholder="https://example.com"
             />
           </div>
           <div className="space-y-1">

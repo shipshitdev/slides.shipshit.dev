@@ -10,9 +10,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { CreateProjectDto } from './dto/create-project.dto';
-import type { UpdateProjectDto } from './dto/update-project.dto';
-import type { ProjectsService } from './projects.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+import { ProjectsService } from './projects.service';
 
 @ApiTags('projects')
 @ApiBearerAuth()

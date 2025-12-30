@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { InjectModel } from '@nestjs/mongoose';
 import { type Model, Types } from 'mongoose';
 import { nanoid } from 'nanoid';
-import type { ProjectsService } from '../projects/projects.service';
+import { ProjectsService } from '../projects/projects.service';
 import type { CreateDeckDto } from './dto/create-deck.dto';
 import type { UpdateDeckDto } from './dto/update-deck.dto';
 import { Deck, type DeckDocument } from './schemas/deck.schema';

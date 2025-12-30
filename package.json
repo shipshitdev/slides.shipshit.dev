@@ -1,26 +1,4 @@
 {
-  "name": "pitch-deck-platform",
-  "version": "0.1.0",
-  "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
-  "scripts": {
-    "pre:install": "bun update --latest --recursive && bun install",
-    "prepare:deploy": "bun install",
-    "dev": "bun run --filter ./apps/api dev & bun run --filter ./apps/web dev",
-    "dev:api": "bun run --filter api dev",
-    "dev:web": "bun run --filter web dev",
-    "build": "bun --filter '*' run build",
-    "start": "bun --filter '*' run start",
-    "lint": "biome lint .",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "lint:fix": "biome lint --write .",
-    "check": "biome check .",
-    "check:fix": "biome check --write .",
-    "prepare": "husky install"
-  },
   "devDependencies": {
     "@biomejs/biome": "2.3.10",
     "husky": "9.1.7",
@@ -30,5 +8,26 @@
     "*.{js,jsx,ts,tsx,json}": [
       "biome check --write"
     ]
-  }
+  },
+  "name": "pitch-deck-platform",
+  "private": true,
+  "scripts": {
+    "build": "bun --filter '*' run build",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "dev": "bun run --filter ./apps/api dev & bun run --filter ./apps/web dev",
+    "dev:api": "bun run --filter api dev",
+    "dev:web": "bun run --filter web dev",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "pre:install": "bun update --latest --recursive && bun install",
+    "prepare:deploy": "bun install",
+    "start": "bun --filter '*' run start"
+  },
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ]
 }

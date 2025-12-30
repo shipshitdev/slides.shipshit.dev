@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsEnum, IsObject, IsOptional, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsEnum, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class SlideContentDto {
   @ApiProperty()
@@ -43,14 +44,18 @@ export class CreateDeckDto {
   @IsEnum(['cold_leads', 'customers', 'investors', 'custom'])
   audienceType: string;
 
-  @ApiPropertyOptional({ description: 'Slides content' })
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Slides content', type: [SlideContentDto] })
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SlideContentDto)
+  @IsOptional()
   slides?: SlideContentDto[];
 
-  @ApiPropertyOptional({ description: 'Theme overrides' })
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Theme overrides', type: DeckThemeDto })
   @IsObject()
+  @ValidateNested()
+  @Type(() => DeckThemeDto)
+  @IsOptional()
   theme?: DeckThemeDto;
 
   @ApiPropertyOptional({ description: 'Whether the deck is publicly accessible' })

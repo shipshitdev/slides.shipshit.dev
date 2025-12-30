@@ -1,16 +1,4 @@
 {
-  "name": "api",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "build": "nest build",
-    "dev": "nest start --watch",
-    "start": "nest start",
-    "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "format": "prettier --write \"**/*.{ts,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,json,md}\""
-  },
   "dependencies": {
     "@nestjs/common": "11.1.11",
     "@nestjs/config": "4.0.2",
@@ -40,5 +28,17 @@
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0",
     "typescript": "5.9.3"
-  }
+  },
+  "name": "api",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,json,md}\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "start": "nest start",
+    "start:prod": "node dist/main"
+  },
+  "version": "0.1.0"
 }

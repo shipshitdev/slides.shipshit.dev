@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { ExternalLink, FolderOpen, Plus, Presentation } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { type Project, projectsApi, setAuthHeader } from '@/lib/api';
@@ -14,14 +14,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isLoaded && user) {
-      setAuthHeader(user.id);
-      loadProjects();
-    }
-  }, [isLoaded, user, loadProjects]);
-
-  async function loadProjects() {
+  const loadProjects = useCallback(async () => {
     try {
       setLoading(true);
       const response = await projectsApi.getAll();
@@ -32,7 +25,14 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      setAuthHeader(user.id);
+      loadProjects();
+    }
+  }, [isLoaded, user, loadProjects]);
 
   if (!isLoaded || loading) {
     return (
