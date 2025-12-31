@@ -9,7 +9,8 @@
       "biome check --write"
     ]
   },
-  "name": "pitch-deck-platform",
+  "name": "deckflow.com",
+  "description": "Pitch deck creation platform with AI assistance",
   "private": true,
   "scripts": {
     "build": "bun --filter '*' run build",
