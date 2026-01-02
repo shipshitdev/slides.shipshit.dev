@@ -1,4 +1,4 @@
-# Project Map - Easy Slides
+# Project Map - deckflow
 
 **Purpose:** Quick reference for project structure and responsibilities.
 **Last Updated:** 2025-12-29
@@ -8,7 +8,7 @@
 ## Directory Overview
 
 ```
-Easy Slides/
+deckflow/
 ├── .agent/              # AI documentation (you are here)
 ├── src/                 # Source code
 │   ├── components/      # UI components

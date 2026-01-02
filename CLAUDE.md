@@ -1,4 +1,4 @@
-# Easy Slides
+# deckflow
 
 Claude-specific entry point. Documentation in `.agent/`.
 

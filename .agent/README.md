@@ -1,6 +1,6 @@
-# Easy Slides - Agent Documentation Hub
+# deckflow - Agent Documentation Hub
 
-**Welcome to the Easy Slides workspace!**
+**Welcome to the deckflow workspace!**
 
 This is the `.agent/` folder containing AI agent documentation, session tracking, and project rules.
 

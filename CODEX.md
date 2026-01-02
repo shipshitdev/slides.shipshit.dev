@@ -1,4 +1,4 @@
-# Easy Slides
+# deckflow
 
 Codex-specific entry point. Documentation in `.agent/`.
 

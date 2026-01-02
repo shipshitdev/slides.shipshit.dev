@@ -1,4 +1,4 @@
-# Easy Slides
+# deckflow
 
 This file provides entry points for AI agents.
 

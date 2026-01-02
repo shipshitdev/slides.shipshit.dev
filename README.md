@@ -1,5 +1,8 @@
 # Pitch Deck Platform
 
+![Project Type](https://img.shields.io/badge/Project-Tool-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 A full-stack application for creating and managing pitch decks for different audiences (cold leads, customers, investors) across multiple projects/startups.
 
 ## Tech Stack
