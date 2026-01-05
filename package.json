@@ -24,8 +24,12 @@
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "pre:install": "bun update --latest --recursive && bun install",
+    "prepare": "husky",
     "prepare:deploy": "bun install",
-    "start": "bun --filter '*' run start"
+    "start": "bun --filter '*' run start",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest --watch"
   },
   "version": "0.1.0",
   "workspaces": [
