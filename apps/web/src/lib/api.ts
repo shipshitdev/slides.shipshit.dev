@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { SlideType } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
@@ -78,7 +79,7 @@ export interface UpdateProjectInput extends Partial<CreateProjectInput> {}
 
 export interface SlideContent {
   id: string;
-  type: string;
+  type: SlideType;
   data: Record<string, unknown>;
 }
 

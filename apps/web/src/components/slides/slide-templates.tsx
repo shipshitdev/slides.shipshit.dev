@@ -28,15 +28,12 @@ export function TitleSlide({ data, colors, fonts }: SlideProps) {
         fontFamily: bodyFont,
       }}
     >
-      <h1
-        className="text-7xl font-bold mb-6"
-        style={{ fontFamily: headingFont }}
-      >
+      <h1 className="text-7xl font-bold mb-6" style={{ fontFamily: headingFont }}>
         {String(data.title || 'Title')}
       </h1>
-      {data.subtitle && (
+      {typeof data.subtitle === 'string' && data.subtitle && (
         <p className="text-3xl opacity-90" style={{ fontFamily: bodyFont }}>
-          {String(data.subtitle)}
+          {data.subtitle}
         </p>
       )}
     </div>
@@ -195,19 +192,16 @@ export function QuoteSlide({ data, colors, fonts }: SlideProps) {
         fontFamily: bodyFont,
       }}
     >
-      <blockquote
-        className="text-5xl italic mb-12 max-w-4xl"
-        style={{ fontFamily: bodyFont }}
-      >
+      <blockquote className="text-5xl italic mb-12 max-w-4xl" style={{ fontFamily: bodyFont }}>
         &ldquo;{String(data.quote || 'Quote goes here')}&rdquo;
       </blockquote>
       <div style={{ color: colors?.primary || '#6366f1' }}>
         <div className="font-semibold text-2xl" style={{ fontFamily: headingFont }}>
           {String(data.author || 'Author')}
         </div>
-        {data.role && (
+        {typeof data.role === 'string' && data.role && (
           <div className="text-xl opacity-70 mt-2" style={{ fontFamily: bodyFont }}>
-            {String(data.role)}
+            {data.role}
           </div>
         )}
       </div>
@@ -230,18 +224,12 @@ export function CTASlide({ data, colors, fonts }: SlideProps) {
         fontFamily: bodyFont,
       }}
     >
-      <h2
-        className="text-7xl font-bold mb-8"
-        style={{ fontFamily: headingFont }}
-      >
+      <h2 className="text-7xl font-bold mb-8" style={{ fontFamily: headingFont }}>
         {String(data.title || 'Get Started')}
       </h2>
-      {data.description && (
-        <p
-          className="text-2xl opacity-90 mb-12 max-w-3xl"
-          style={{ fontFamily: bodyFont }}
-        >
-          {String(data.description)}
+      {typeof data.description === 'string' && data.description && (
+        <p className="text-2xl opacity-90 mb-12 max-w-3xl" style={{ fontFamily: bodyFont }}>
+          {data.description}
         </p>
       )}
       {data.buttonUrl ? (
@@ -262,9 +250,9 @@ export function CTASlide({ data, colors, fonts }: SlideProps) {
           {String(data.buttonText || 'Contact Us')}
         </button>
       )}
-      {data.contactEmail && (
+      {typeof data.contactEmail === 'string' && data.contactEmail && (
         <p className="mt-6 text-lg opacity-75" style={{ fontFamily: bodyFont }}>
-          {String(data.contactEmail)}
+          {data.contactEmail}
         </p>
       )}
     </div>
@@ -286,12 +274,12 @@ export function ImageSlide({ data, colors, fonts }: SlideProps) {
         fontFamily: bodyFont,
       }}
     >
-      {data.title && (
+      {typeof data.title === 'string' && data.title && (
         <h2
           className="text-6xl font-bold mb-12"
           style={{ color: colors?.primary || '#6366f1', fontFamily: headingFont }}
         >
-          {String(data.title)}
+          {data.title}
         </h2>
       )}
       <div className="flex-1 flex items-center justify-center">
@@ -307,12 +295,9 @@ export function ImageSlide({ data, colors, fonts }: SlideProps) {
           </div>
         )}
       </div>
-      {data.caption && (
-        <p
-          className="text-center mt-6 text-xl opacity-70"
-          style={{ fontFamily: bodyFont }}
-        >
-          {String(data.caption)}
+      {typeof data.caption === 'string' && data.caption && (
+        <p className="text-center mt-6 text-xl opacity-70" style={{ fontFamily: bodyFont }}>
+          {data.caption}
         </p>
       )}
     </div>

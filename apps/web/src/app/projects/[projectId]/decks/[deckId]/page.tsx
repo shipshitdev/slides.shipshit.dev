@@ -1,5 +1,10 @@
 'use client';
 
+import { useUser } from '@clerk/nextjs';
+import { ArrowLeft, Eye, EyeOff, Loader2, Play, Save, Share2 } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { GoogleFontLoader } from '@/components/slides/google-font-loader';
 import { slideComponents } from '@/components/slides/slide-templates';
 import { SortableBulletList } from '@/components/slides/sortable-bullet-list';
@@ -13,16 +18,12 @@ import {
   decksApi,
   type Project,
   projectsApi,
-  setAuthHeader,
   type SlideContent,
+  setAuthHeader,
 } from '@/lib/api';
-import { useUser } from '@clerk/nextjs';
-import { ArrowLeft, Eye, EyeOff, Loader2, Play, Save, Share2 } from 'lucide-react';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import type { SlideType } from '@/types';
 
-const slideTypes = [
+const slideTypes: { value: SlideType; label: string }[] = [
   { value: 'title', label: 'Title' },
   { value: 'content', label: 'Content' },
   { value: 'stats', label: 'Stats' },
@@ -133,7 +134,7 @@ export default function DeckEditorPage() {
     setDeckTheme((prev) => ({
       ...prev,
       fonts: {
-        ...prev.fonts,
+        ...prev?.fonts,
         ...fonts,
       },
     }));
@@ -151,7 +152,7 @@ export default function DeckEditorPage() {
     }
   }
 
-  function addSlide(type: string) {
+  function addSlide(type: SlideType) {
     const newSlide: SlideContent = {
       id: Date.now().toString(),
       type,
@@ -208,8 +209,8 @@ export default function DeckEditorPage() {
   }
 
   const fonts = {
-    heading: deckTheme.fonts?.heading || project.fonts?.heading || 'Inter',
-    body: deckTheme.fonts?.body || project.fonts?.body || 'Inter',
+    heading: deckTheme?.fonts?.heading || project.fonts?.heading || 'Inter',
+    body: deckTheme?.fonts?.body || project.fonts?.body || 'Inter',
   };
 
   return (
@@ -232,13 +233,13 @@ export default function DeckEditorPage() {
         <div className="flex items-center gap-2">
           <div className="flex items-end gap-2 pr-2 border-r border-[var(--border)]">
             <FontSelect
-              value={deckTheme.fonts?.heading || project.fonts?.heading || 'Inter'}
+              value={deckTheme?.fonts?.heading || project.fonts?.heading || 'Inter'}
               onChange={(font) => updateThemeFonts({ heading: font })}
               label="Heading"
               className="w-32"
             />
             <FontSelect
-              value={deckTheme.fonts?.body || project.fonts?.body || 'Inter'}
+              value={deckTheme?.fonts?.body || project.fonts?.body || 'Inter'}
               onChange={(font) => updateThemeFonts({ body: font })}
               label="Body"
               className="w-32"
@@ -297,9 +298,9 @@ export default function DeckEditorPage() {
           <SortableSlideList
             slides={slides}
             selectedSlideIndex={selectedSlideIndex}
-            projectColors={project.colors}
+            projectColors={project.colors || {}}
             projectFonts={project.fonts}
-            deckFonts={deckTheme.fonts}
+            deckFonts={deckTheme?.fonts}
             onSelectSlide={setSelectedSlideIndex}
             onDeleteSlide={deleteSlide}
             onReorderSlides={moveSlide}

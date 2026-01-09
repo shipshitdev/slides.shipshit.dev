@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { type CreateDeckInput, decksApi, setAuthHeader } from '@/lib/api';
+import { type CreateDeckInput, decksApi, type SlideContent, setAuthHeader } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 const audienceTypes = [
@@ -166,8 +166,8 @@ export default function NewDeckPage() {
   );
 }
 
-function getDefaultSlides(audienceType: CreateDeckInput['audienceType']) {
-  const baseSlides = [
+function getDefaultSlides(audienceType: CreateDeckInput['audienceType']): SlideContent[] {
+  const baseSlides: SlideContent[] = [
     {
       id: '1',
       type: 'title',
